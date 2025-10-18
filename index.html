@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>V for Video! 🌌</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(ellipse at bottom, #0b0c1b 0%, #000000 100%);
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    .question {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #1f1f2e;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #343454;
+    }
+    .correct {
+      background-color: green !important;
+    }
+    .wrong {
+      background-color: red !important;
+    }
+    #scoreCard {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+    #timer, #wrongCounter, #streakCounter, #progressTracker {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+    #restartBtn {
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      font-size: 1.1rem;
+      background-color: #444466;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+    #nameForm {
+      margin-bottom: 1.5rem;
+    }
+    #nameInput {
+      display: block;
+  width: 90%;
+  max-width: 300px;
+  margin: 0.5rem auto; 
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="quizContainer">
+   <div id="nameForm">
+  <p style="color: #ffd700; font-size: 1rem; margin-bottom: 0.5rem;">
+   "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better." Samuel Beckett <br> "Try not. Do. Or, do not. There is no Try." Yoda. <br> "The Opposite of a Good Idea is another Good Idea." Neils Bohr <br>
+      </a>
+  </p>
+
+  <!-- Department Selector -->
+  <select id="departmentSelect" style="display: block; width: 90%; max-width: 300px; margin: 0.5rem auto; padding: 0.7rem; font-size: 1rem; border-radius: 5px; border: none;">
+    <option value="">-- Select Department --</option>
+    <option value="Cyber Security">Cyber Security</option>
+    <option value="CSE-1">CSE-1</option>
+    <option value="CSE-2">CSE-2</option>
+    <option value="CSE-3">CSE-3</option>
+<option value="Mechanical Engineering">Mechanical Engineering</option>
+<option value="ECE-1">ECE-1</option>
+<option value="ECE-2">ECE-2</option>
+<option value="ECE-3">ECE-3</option>
+<option value="AI DS-1">AI DS-1</option>
+<option value="AI DS-2">AI DS-2</option>
+<option value="Civil">Civil</option>
+<option value="Agri">Agri</option>
+<option value="EEE">EEE</option>
+<option value="EIE">EIE</option>
+<option value="Medical Electronics">Medical Electronics</option>
+<option value="IT-1">IT-1</option>
+<option value="IT-2">IT-2</option>
+ 
+  </select>
+
+  <!-- Name Fields -->
+  <input type="text" id="nameInput" placeholder="Enter your name" />
+  <button onclick="beginQuiz()">Start Quiz</button>
+</div>
+
+
+    <div id="quizContent" style="display:none;">
+      <div id="timer">⏳ Time: 0s</div>
+      <div id="wrongCounter">❌ Wrong Attempts: 0</div>
+      <div id="streakCounter">🔥 Streak: 0</div>
+      <div id="progressTracker">📍 Question 1 of 5</div>
+      <!-- Audio Clip for Listening Comprehension -->
+<div id="audioContainer" style="margin-bottom: 1rem;">
+  <audio id="quizAudio" controls>
+    <source src="https://github.com/andrewveda/voicequests/blob/fca50947da95ca90ae1acd0edbc6796a34231ef8/Talent.m4a" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</div>
+      <div class="question" id="question">Loading...</div>
+      <div class="options" id="options"></div>
+      <div id="scoreCard"></div>
+      <button id="restartBtn" style="display: none;">Restart</button>
+    </div>
+  </div>
+
+  <script>
+   
+    const quizData = [
+ 
+  {
+    "q": "Next week, my family and I ___ (go) to Ooty for a vacation.",
+    "options": ["will go", "will be going"],
+    "correct": [0, 1],
+    "example": [
+      "We will go to Chennai next weekend for a family wedding.",
+      "We will be going to Goa this summer because the tickets are already booked."
+    ]
+  },
+  {
+    "q": "We ___ (stay) there for three days.",
+    "options": ["will stay", "will be staying"],
+    "correct": [0, 1],
+    "example": [
+      "They will stay at a hotel near the beach for two nights.",
+      "They will be staying at their cousin’s house for a week during the festival."
+    ]
+  },
+  {
+    "q": "My sister ___ (take) a lot of photos for her blog.",
+    "options": ["will take", "will be taking"],
+    "correct": [0, 1],
+    "example": [
+      "She will take pictures of every tourist spot she visits.",
+      "She will be taking photos throughout the trip for her travel vlog."
+    ]
+  },
+  {
+    "q": "I ___ (try) the local food and chocolates.",
+    "options": ["will try", "will be trying"],
+    "correct": [0, 1],
+    "example": [
+      "I will try the new restaurant near my college tomorrow.",
+      "I will be trying different dishes when I visit Delhi next month."
+    ]
+  },
+  {
+    "q": "We ___ (return) on Sunday evening.",
+    "options": ["will return", "will be returning"],
+    "correct": [0, 1],
+    "example": [
+      "We will return home before it gets dark.",
+      "We will be returning from the conference on Monday afternoon."
+    ]
+  },
+  {
+    "q": "It ___ (be) a relaxing trip for all of us.",
+    "options": ["will be"],
+    "correct": [0],
+    "example": [
+      "It will be an unforgettable experience for everyone involved."
+    ]
+  },
+  {
+    "q": "On Saturday, I ________ (help) my neighbor with her garden.",
+    "options": ["will help", "will be helping"],
+    "correct": [0, 1],
+    "example": [
+      "I will help my friend move into her new apartment this weekend.",
+      "I will be helping my uncle paint his house tomorrow morning."
+    ]
+  },
+  {
+    "q": "We ________ (plant) new flowers and ________ (trim) the hedges.",
+    "options": ["will plant", "will be planting", "will trim", "will be trimming"],
+    "correct": [0, 1, 2, 3],
+    "example": [
+      "We will plant trees near the school gate on Environment Day.",
+      "We will be planting roses and lilies in the front yard this Sunday.",
+      "They will trim the branches before the storm season.",
+      "They will be trimming the garden hedge all afternoon."
+    ]
+  },
+  {
+    "q": "I ________ (learn) a lot about gardening from her.",
+    "options": ["will learn", "will be learning"],
+    "correct": [0, 1],
+    "example": [
+      "I will learn new coding skills in the next semester.",
+      "I will be learning photography techniques during the workshop."
+    ]
+  },
+  {
+    "q": "After we finish, she ________ (invite) me for tea and snacks.",
+    "options": ["will invite"],
+    "correct": [0],
+    "example": [
+      "She will invite her friends to the housewarming party."
+    ]
+  },
+  {
+    "q": "By the end of the day, I ________ (feel) proud of our hard work.",
+    "options": ["will feel", "will have felt"],
+    "correct": [0, 1],
+    "example": [
+      "I will feel happy once the project is complete.",
+      "I will have felt accomplished after submitting all assignments."
+    ]
+  },
+  {
+    "q": "Our seniors ___ (have) their farewell next month.",
+    "options": ["will have", "will be having"],
+    "correct": [0, 1],
+    "example": [
+      "The company will have its annual day next March.",
+      "The team will be having their final meeting tomorrow."
+    ]
+  },
+  {
+    "q": "The student council ___ (plan) the event this weekend.",
+    "options": ["will plan", "will be planning"],
+    "correct": [0, 1],
+    "example": [
+      "They will plan a surprise party for the teacher.",
+      "They will be planning the festival decorations all weekend."
+    ]
+  },
+  {
+    "q": "I ___ (write) the script for the cultural program.",
+    "options": ["will write", "will be writing"],
+    "correct": [0, 1],
+    "example": [
+      "I will write the report tonight after dinner.",
+      "I will be writing the speech draft over the weekend."
+    ]
+  },
+  {
+    "q": "Our team ___ (arrange) gifts and decorations.",
+    "options": ["will arrange", "will be arranging"],
+    "correct": [0, 1],
+    "example": [
+      "They will arrange the chairs before the seminar starts.",
+      "They will be arranging the stage setup all morning."
+    ]
+  },
+  {
+    "q": "By next Friday, we ___ (finalize) all arrangements.",
+    "options": ["will finalize", "will have finalized"],
+    "correct": [0, 1],
+    "example": [
+      "We will finalize the guest list tomorrow.",
+      "We will have finalized the design by next week."
+    ]
+  },
+  {
+    "q": "The farewell night ___ (create) beautiful memories for everyone.",
+    "options": ["will create"],
+    "correct": [0],
+    "example": [
+      "The concert will create unforgettable experiences for the audience."
+    ]
+  },
+  {
+    "q": "Next summer, my friends and I ________ (volunteer) at an animal shelter.",
+    "options": ["will volunteer", "will be volunteering"],
+    "correct": [0, 1],
+    "example": [
+      "We will volunteer at a beach cleanup drive next weekend.",
+      "We will be volunteering at a children’s camp in June."
+    ]
+  },
+  {
+    "q": "We ________ (take care) of the animals and ________ (assist) with adoption events.",
+    "options": ["will take care", "will be taking care", "will assist", "will be assisting"],
+    "correct": [0, 1, 2, 3],
+    "example": [
+      "They will take care of the plants during the summer.",
+      "They will be taking care of the rescued animals this month.",
+      "He will assist the manager with the project presentation.",
+      "He will be assisting the doctor during the health camp."
+    ]
+  },
+  {
+    "q": "I ________ (learn) about animal behavior and training.",
+    "options": ["will learn", "will be learning"],
+    "correct": [0, 1],
+    "example": [
+      "I will learn basic guitar chords next month.",
+      "I will be learning swimming techniques throughout the summer."
+    ]
+  },
+  {
+    "q": "We ________ (organize) fundraising activities to support the shelter.",
+    "options": ["will organize", "will be organizing"],
+    "correct": [0, 1],
+    "example": [
+      "They will organize a charity event for the local orphanage.",
+      "They will be organizing a blood donation drive next week."
+    ]
+  },
+  {
+    "q": "It ________ (be) a rewarding experience.",
+    "options": ["will be"],
+    "correct": [0],
+    "example": [
+      "It will be a great opportunity to learn teamwork."
+    ]
+  },
+  {
+    "q": "Next week, I ___ (enroll) in an online course on digital marketing.",
+    "options": ["will enroll", "will be enrolling"],
+    "correct": [0, 1],
+    "example": [
+      "I will enroll in a French class this semester.",
+      "I will be enrolling in a data analytics course soon."
+    ]
+  },
+  {
+    "q": "The course ___ (start) from August 1st.",
+    "options": ["will start"],
+    "correct": [0],
+    "example": [
+      "The new semester will start on Monday."
+    ]
+  },
+  {
+    "q": "Each week, the instructor ___ (conduct) live sessions and quizzes.",
+    "options": ["will conduct", "will be conducting"],
+    "correct": [0, 1],
+    "example": [
+      "The trainer will conduct a test every Friday.",
+      "The professor will be conducting weekly tutorials online."
+    ]
+  },
+  {
+    "q": "I ___ (complete) all modules before the placement season begins.",
+    "options": ["will complete", "will have completed"],
+    "correct": [0, 1],
+    "example": [
+      "I will complete my homework tonight.",
+      "I will have completed my degree by next summer."
+    ]
+  },
+  {
+    "q": "This course ___ (enhance) my resume and skills.",
+    "options": ["will enhance"],
+    "correct": [0],
+    "example": [
+      "This internship will enhance my professional experience."
+    ]
+  }
+];
+
+    let current = 0;
+    let correctCount = 0;
+    let totalWrongGuesses = 0;
+    let startTime;
+    let timerInterval;
+    let playerName = "";
+    let playerNumber = "";
+    let guessesPerQuestion = [];
+    let currentStreak = 0;
+    let highestStreak = 0;
+    let streakHistory = [];
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const timerEl = document.getElementById("timer");
+    const wrongCounterEl = document.getElementById("wrongCounter");
+    const deptField = document.getElementById("departmentSelect");
+    const deptVal = deptField.value;
+    const streakCounterEl = document.getElementById("streakCounter");
+    const progressTracker = document.getElementById("progressTracker");
+    const scoreCard = document.getElementById("scoreCard");
+    const restartBtn = document.getElementById("restartBtn");
+
+    let playerDepartment = "";
+
+function beginQuiz() {
+  const nameField = document.getElementById("nameInput");
+  const deptField = document.getElementById("departmentSelect");
+
+  const nameVal = nameField.value.trim();
+  const deptVal = deptField.value;
+
+  if (!deptVal) {
+    alert("Please select your department!");
+    return;
+  }
+
+  if (!nameVal) {
+    alert("Please enter your name!");
+    return;
+  }
+
+  playerName = nameVal;
+  playerDepartment = deptVal;
+
+
+  document.getElementById("nameForm").style.display = "none";
+  document.getElementById("quizContent").style.display = "block";
+  startQuiz();
+}
+
+
+    function startQuiz() {
+      current = 0;
+      correctCount = 0;
+      totalWrongGuesses = 0;
+      guessesPerQuestion = [];
+      currentStreak = 0;
+      highestStreak = 0;
+      streakHistory = [];
+      startTime = Date.now();
+
+      timerEl.innerText = "⏳ Time: 0s";
+      wrongCounterEl.innerText = `❌ Wrong Attempts: 0`;
+      streakCounterEl.innerText = `🔥 Streak: 0`;
+      scoreCard.innerHTML = "";
+      restartBtn.style.display = "none";
+
+      loadQuestion();
+      startTimer();
+    }
+
+    function loadQuestion() {
+      if (current >= quizData.length) return showScore();
+
+      const data = quizData[current];
+      guessesPerQuestion[current] = 0;
+      optionsEl.innerHTML = "";
+      questionEl.innerHTML = `${data.q}<br><br><em>Example:<br>${data.example.join("<br>")}</em>`;
+      progressTracker.innerText = `📍 Question ${current + 1} of ${quizData.length}`;
+
+      data.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.dataset.index = index;
+        btn.onclick = () => handleAnswer(btn, data.correct);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(button, correctIndexes) {
+      guessesPerQuestion[current]++;
+      const idx = parseInt(button.dataset.index);
+      const isCorrect = correctIndexes.includes(idx);
+
+      if (isCorrect) {
+        button.classList.add("correct");
+        button.disabled = true;
+        currentStreak++;
+        if (currentStreak > highestStreak) highestStreak = currentStreak;
+        streakHistory.push(currentStreak);
+        streakCounterEl.innerText = `🔥 Streak: ${currentStreak}`;
+
+        const allClicked = correctIndexes.every(i =>
+          document.querySelector(`button[data-index="${i}"]`).classList.contains("correct")
+        );
+
+        if (allClicked) {
+          correctCount++;
+          setTimeout(() => {
+            current++;
+            loadQuestion();
+          }, 500);
+        }
+      } else {
+        totalWrongGuesses++;
+        wrongCounterEl.innerText = `❌ Wrong Attempts: ${totalWrongGuesses}`;
+        button.classList.add("wrong");
+        setTimeout(() => button.classList.remove("wrong"), 500);
+        currentStreak = 0;
+        streakCounterEl.innerText = `🔥 Streak: 0`;
+      }
+    }
+
+    function showScore() {
+      clearInterval(timerInterval);
+      const totalTime = Math.floor((Date.now() - startTime) / 1000);
+      questionEl.innerText = "🎉 Quiz Completed!";
+      optionsEl.innerHTML = "";
+      progressTracker.innerText = "";
+      scoreCard.innerHTML = `
+        <p>👤 Player: ${playerName} </p>
+        <p>✅ Correct Answers: ${correctCount} / ${quizData.length}</p>
+        <p>❌ Wrong Attempts: ${totalWrongGuesses}</p>
+        <p>🔥 Highest Streak: ${highestStreak}</p>
+        <p>⏱️ Time Taken: ${totalTime} seconds</p>
+        <p>📝 Guesses per Question: ${guessesPerQuestion.join(", ")}</p>
+      `;
+      restartBtn.style.display = "inline-block";
+
+      // Post results to Google Sheet
+      fetch("https://script.google.com/macros/s/AKfycbxA0lRkERWFt2cYfmm04IQioaG4-21k5VFF5CFKP30zyVaJXM5_27PL3v8JIZEweK3u/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+                  name: playerName,
+                   correct: correctCount,
+          wrong: totalWrongGuesses,
+          time: totalTime,
+          department: playerDepartment,
+  questId: "Quest 55",
+          guesses: guessesPerQuestion
+                    })
+      });
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        timerEl.innerText = `⏳ Time: ${elapsed}s`;
+      }, 1000);
+    }
+
+    restartBtn.onclick = () => {
+      document.getElementById("quizContent").style.display = "none";
+      document.getElementById("nameForm").style.display = "block";
+      document.getElementById("nameInput").value = "";
+    };
+  </script>
+</body>
+</html>
