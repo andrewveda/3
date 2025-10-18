@@ -128,7 +128,7 @@
       <!-- Audio Clip for Listening Comprehension -->
 <div id="audioContainer" style="margin-bottom: 1rem;">
   <audio id="quizAudio" controls>
-    <source src="https://raw.githubusercontent.com/andrewveda/3/d17b611d7bf0198fa61a9f9617f5ae9c4118a72d/Talentnew.m4a" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/andrewveda/3/1330764b2b61993ba6b3a8be6b1c3e69370f1fe3/Pygmalion.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 </div>
@@ -142,247 +142,203 @@
   <script>
    
     const quizData = [
- 
   {
-    "q": "Next week, my family and I ___ (go) to Ooty for a vacation.",
-    "options": ["will go", "will be going"],
-    "correct": [0, 1],
-    "example": [
-      "We will go to Chennai next weekend for a family wedding.",
-      "We will be going to Goa this summer because the tickets are already booked."
-    ]
+    "q": "What is the Pygmalion effect?",
+    "options": [
+      "A phenomenon where expectations have no effect on performance",
+      "A phenomenon where higher expectations lead to higher performance",
+      "A phenomenon where lower expectations lead to higher performance",
+      "A psychological effect only observed in animals"
+    ],
+    "correct": [1],
+    "example": ["🌟📈🏀"]
   },
   {
-    "q": "We ___ (stay) there for three days.",
-    "options": ["will stay", "will be staying"],
-    "correct": [0, 1],
-    "example": [
-      "They will stay at a hotel near the beach for two nights.",
-      "They will be staying at their cousin’s house for a week during the festival."
-    ]
-  },
-  {
-    "q": "My sister ___ (take) a lot of photos for her blog.",
-    "options": ["will take", "will be taking"],
-    "correct": [0, 1],
-    "example": [
-      "She will take pictures of every tourist spot she visits.",
-      "She will be taking photos throughout the trip for her travel vlog."
-    ]
-  },
-  {
-    "q": "I ___ (try) the local food and chocolates.",
-    "options": ["will try", "will be trying"],
-    "correct": [0, 1],
-    "example": [
-      "I will try the new restaurant near my college tomorrow.",
-      "I will be trying different dishes when I visit Delhi next month."
-    ]
-  },
-  {
-    "q": "We ___ (return) on Sunday evening.",
-    "options": ["will return", "will be returning"],
-    "correct": [0, 1],
-    "example": [
-      "We will return home before it gets dark.",
-      "We will be returning from the conference on Monday afternoon."
-    ]
-  },
-  {
-    "q": "It ___ (be) a relaxing trip for all of us.",
-    "options": ["will be"],
+    "q": "In the basketball example, how does the coach's attitude toward Chris differ from Joe?",
+    "options": [
+      "The coach pushes Chris to do better and gives feedback, but gives Joe little attention and guidance",
+      "The coach ignores Chris but gives Joe extra training",
+      "The coach punishes Chris for mistakes and encourages Joe",
+      "The coach treats both players equally"
+    ],
     "correct": [0],
-    "example": [
-      "It will be an unforgettable experience for everyone involved."
-    ]
+    "example": ["🏀👀💪"]
   },
   {
-    "q": "On Saturday, I ________ (help) my neighbor with her garden.",
-    "options": ["will help", "will be helping"],
-    "correct": [0, 1],
-    "example": [
-      "I will help my friend move into her new apartment this weekend.",
-      "I will be helping my uncle paint his house tomorrow morning."
-    ]
+    "q": "What did Rosenthal’s rat experiment demonstrate?",
+    "options": [
+      "Maze complexity affects rat performance",
+      "Rats have varying intelligence levels",
+      "Smart rats are genetically superior",
+      "Coaches’ expectations influenced the rats’ performance"
+    ],
+    "correct": [3],
+    "example": ["🐀👨‍🏫✨"]
+  },
+   {
+    "q": "In the Pygmalion in school study, what was the main mechanism through which teacher expectations influenced student performance?",
+    "options": [
+      "By giving higher grades regardless of work",
+      "By acting differently toward students they believed were talented, offering more attention and encouragement",
+      "By changing the classroom curriculum for certain students",
+      "By informing the students they were talented"
+    ],
+    "correct": [1],
+    "example": ["👩‍🏫✨💡📈"]
   },
   {
-    "q": "We ________ (plant) new flowers and ________ (trim) the hedges.",
-    "options": ["will plant", "will be planting", "will trim", "will be trimming"],
-    "correct": [0, 1, 2, 3],
-    "example": [
-      "We will plant trees near the school gate on Environment Day.",
-      "We will be planting roses and lilies in the front yard this Sunday.",
-      "They will trim the branches before the storm season.",
-      "They will be trimming the garden hedge all afternoon."
-    ]
+    "q": "What does the Pygmalion effect suggest about the power of teacher expectations?",
+    "options": [
+      "Teacher expectations have no measurable impact on student learning",
+      "Teacher expectations can unconsciously shape students’ motivation, confidence, and outcomes",
+      "Teacher expectations only matter if students are already high achievers",
+      "Teacher expectations guarantee students’ success"
+    ],
+    "correct": [1],
+    "example": ["🧠👩‍🏫➡️📚🌟"]
   },
   {
-    "q": "I ________ (learn) a lot about gardening from her.",
-    "options": ["will learn", "will be learning"],
-    "correct": [0, 1],
-    "example": [
-      "I will learn new coding skills in the next semester.",
-      "I will be learning photography techniques during the workshop."
-    ]
-  },
-  {
-    "q": "After we finish, she ________ (invite) me for tea and snacks.",
-    "options": ["will invite"],
+    "q": "Why were the students in the Pygmalion study unaware of the information given to teachers?",
+    "options": [
+      "So that the effect measured was based on teacher behavior, not student self-perception",
+      "Because the students were too young to understand",
+      "Because it was unethical to tell students",
+      "To confuse the researchers"
+    ],
     "correct": [0],
-    "example": [
-      "She will invite her friends to the housewarming party."
-    ]
+    "example": ["🙈👩‍🏫➡️🏫📊"]
   },
   {
-    "q": "By the end of the day, I ________ (feel) proud of our hard work.",
-    "options": ["will feel", "will have felt"],
-    "correct": [0, 1],
-    "example": [
-      "I will feel happy once the project is complete.",
-      "I will have felt accomplished after submitting all assignments."
-    ]
-  },
-  {
-    "q": "Our seniors ___ (have) their farewell next month.",
-    "options": ["will have", "will be having"],
-    "correct": [0, 1],
-    "example": [
-      "The company will have its annual day next March.",
-      "The team will be having their final meeting tomorrow."
-    ]
-  },
-  {
-    "q": "The student council ___ (plan) the event this weekend.",
-    "options": ["will plan", "will be planning"],
-    "correct": [0, 1],
-    "example": [
-      "They will plan a surprise party for the teacher.",
-      "They will be planning the festival decorations all weekend."
-    ]
-  },
-  {
-    "q": "I ___ (write) the script for the cultural program.",
-    "options": ["will write", "will be writing"],
-    "correct": [0, 1],
-    "example": [
-      "I will write the report tonight after dinner.",
-      "I will be writing the speech draft over the weekend."
-    ]
-  },
-  {
-    "q": "Our team ___ (arrange) gifts and decorations.",
-    "options": ["will arrange", "will be arranging"],
-    "correct": [0, 1],
-    "example": [
-      "They will arrange the chairs before the seminar starts.",
-      "They will be arranging the stage setup all morning."
-    ]
-  },
-  {
-    "q": "By next Friday, we ___ (finalize) all arrangements.",
-    "options": ["will finalize", "will have finalized"],
-    "correct": [0, 1],
-    "example": [
-      "We will finalize the guest list tomorrow.",
-      "We will have finalized the design by next week."
-    ]
-  },
-  {
-    "q": "The farewell night ___ (create) beautiful memories for everyone.",
-    "options": ["will create"],
+    "q": "Which of these best illustrates the Pygmalion effect in a classroom?",
+    "options": [
+      "A teacher unconsciously calls on certain students more, gives more feedback, and those students improve",
+      "A teacher gives equal attention and support to all students",
+      "Students are told they are gifted but receive no extra support",
+      "The teacher follows the curriculum strictly without interacting"
+    ],
     "correct": [0],
-    "example": [
-      "The concert will create unforgettable experiences for the audience."
-    ]
+    "example": ["🗣️👩‍🏫👦📈"]
   },
   {
-    "q": "Next summer, my friends and I ________ (volunteer) at an animal shelter.",
-    "options": ["will volunteer", "will be volunteering"],
-    "correct": [0, 1],
-    "example": [
-      "We will volunteer at a beach cleanup drive next weekend.",
-      "We will be volunteering at a children’s camp in June."
-    ]
+    "q": "What lesson about teaching can be drawn from the Pygmalion effect study?",
+    "options": [
+      "Teachers should avoid having expectations to remain neutral",
+      "Positive expectations and belief in students’ abilities can lead to real improvement",
+      "Teachers should only focus on top performers",
+      "Student effort is irrelevant if teachers are biased"
+    ],
+    "correct": [1],
+    "example": ["🌟👩‍🏫➡️💪📚"]
   },
   {
-    "q": "We ________ (take care) of the animals and ________ (assist) with adoption events.",
-    "options": ["will take care", "will be taking care", "will assist", "will be assisting"],
-    "correct": [0, 1, 2, 3],
-    "example": [
-      "They will take care of the plants during the summer.",
-      "They will be taking care of the rescued animals this month.",
-      "He will assist the manager with the project presentation.",
-      "He will be assisting the doctor during the health camp."
-    ]
+    "q": "The Pygmalion effect shows that in classrooms, students’ outcomes are shaped by:",
+    "options": [
+      "Only their innate intelligence",
+      "Teachers’ conscious and unconscious beliefs about their potential",
+      "Random chance",
+      "School resources alone"
+    ],
+    "correct": [1],
+    "example": ["🧠👩‍🏫➡️🏫📈"]
   },
   {
-    "q": "I ________ (learn) about animal behavior and training.",
-    "options": ["will learn", "will be learning"],
-    "correct": [0, 1],
-    "example": [
-      "I will learn basic guitar chords next month.",
-      "I will be learning swimming techniques throughout the summer."
-    ]
+    "q": "If a teacher expects low performance from certain students, the Pygmalion effect predicts:",
+    "options": [
+      "Students will outperform expectations anyway",
+      "Students may receive less support, lose confidence, and underperform",
+      "Expectations have no effect",
+      "Students’ performance depends entirely on grades"
+    ],
+    "correct": [1],
+    "example": ["📉👩‍🏫➡️😔📚"]
   },
   {
-    "q": "We ________ (organize) fundraising activities to support the shelter.",
-    "options": ["will organize", "will be organizing"],
-    "correct": [0, 1],
-    "example": [
-      "They will organize a charity event for the local orphanage.",
-      "They will be organizing a blood donation drive next week."
-    ]
-  },
-  {
-    "q": "It ________ (be) a rewarding experience.",
-    "options": ["will be"],
+    "q": "What conclusion did Robert Rosenthal make about expectations?",
+    "options": [
+      "Expecting certain behaviors can lead us to act in ways that make them occur",
+      "Expectations negatively affect intelligence",
+      "Expectations do not influence others' behavior",
+      "Expectations only work in controlled experiments"
+    ],
     "correct": [0],
-    "example": [
-      "It will be a great opportunity to learn teamwork."
-    ]
+    "example": ["🤔➡️💡✅"]
   },
   {
-    "q": "Next week, I ___ (enroll) in an online course on digital marketing.",
-    "options": ["will enroll", "will be enrolling"],
-    "correct": [0, 1],
-    "example": [
-      "I will enroll in a French class this semester.",
-      "I will be enrolling in a data analytics course soon."
-    ]
+    "q": "Which factor starts the Pygmalion effect circle?",
+    "options": [
+      "The final performance outcome",
+      "The beliefs about another person's abilities",
+      "The beliefs about oneself",
+      "The actions of the other person"
+    ],
+    "correct": [1],
+    "example": ["🔄🧠👤"]
   },
   {
-    "q": "The course ___ (start) from August 1st.",
-    "options": ["will start"],
+    "q": "What is the result of Chris receiving positive attention from the coach?",
+    "options": [
+      "Chris loses interest in playing",
+      "Chris believes in his own success and trains harder",
+      "Chris becomes dependent on the coach",
+      "Chris ignores the coach’s feedback"
+    ],
+    "correct": [1],
+    "example": ["🏀😃💯"]
+  },
+  {
+    "q": "How did the beliefs of the basketball players about themselves affect their actions?",
+    "options": [
+      "Chris trained less, Joe trained more",
+      "Their beliefs had no effect on their actions",
+      "Chris gave his full effort and enjoyed playing, Joe gave less effort and missed sessions",
+      "Both Chris and Joe became overconfident"
+    ],
+    "correct": [2],
+    "example": ["🏀😊😔📉"]
+  },
+  {
+    "q": "Which of these statements reflects the Pygmalion effect correctly?",
+    "options": [
+      "High expectations can lead to improved performance through supportive actions",
+      "Expectations have no connection to performance",
+      "Only genetic ability determines performance outcomes",
+      "Negative expectations always improve performance"
+    ],
     "correct": [0],
-    "example": [
-      "The new semester will start on Monday."
-    ]
+    "example": ["🌟➡️📈🙌"]
+  },
+ {
+    "q": "If perspectives create reality, what is a key way to improve outcomes in any human interaction?",
+    "options": [
+      "Ignore people’s feelings and abilities",
+      "Hold positive, supportive expectations and act accordingly",
+      "Focus only on rules and metrics, not relationships",
+      "Wait for objective data before acting"
+    ],
+    "correct": [1],
+    "example": ["🌟🤝💪"]
   },
   {
-    "q": "Each week, the instructor ___ (conduct) live sessions and quizzes.",
-    "options": ["will conduct", "will be conducting"],
-    "correct": [0, 1],
-    "example": [
-      "The trainer will conduct a test every Friday.",
-      "The professor will be conducting weekly tutorials online."
-    ]
+    "q": "Which statement best aligns with the philosophical idea behind the Pygmalion effect?",
+    "options": [
+      "Reality exists independently of our beliefs and expectations",
+      "Our perceptions and expectations actively shape the outcomes we experience",
+      "Human behavior is entirely determined by genetics",
+      "Expectations have no influence on others’ reality"
+    ],
+    "correct": [1],
+    "example": ["🧠➡️🌎✨"]
   },
   {
-    "q": "I ___ (complete) all modules before the placement season begins.",
-    "options": ["will complete", "will have completed"],
-    "correct": [0, 1],
-    "example": [
-      "I will complete my homework tonight.",
-      "I will have completed my degree by next summer."
-    ]
-  },
-  {
-    "q": "This course ___ (enhance) my resume and skills.",
-    "options": ["will enhance"],
-    "correct": [0],
-    "example": [
-      "This internship will enhance my professional experience."
-    ]
+    "q": "The Pygmalion effect supports the idea that:",
+    "options": [
+      "Expecting nothing leads to better results",
+      "Beliefs, expectations, and actions together shape what we experience as reality",
+      "Reality is fully objective and independent of human perception",
+      "Only tangible rewards influence outcomes"
+    ],
+    "correct": [1],
+    "example": ["💭👀➡️🌎"]
   }
 ];
 
