@@ -16,22 +16,22 @@
     .container {
       max-width: 800px;
       margin: 2rem auto;
+      padding: 1.5rem; /* Reduced padding for mobile */
       background: rgba(255, 255, 255, 0.05);
-      padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
     }
     .question {
-      font-size: 1.5rem;
+      font-size: 1.3rem; /* Adjusted for mobile */
       margin-bottom: 1rem;
     }
     .options {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem; /* Reduced gap */
     }
     button {
-      padding: 1rem;
+      padding: 0.8rem; /* Adjusted padding */
       border: none;
       border-radius: 10px;
       font-size: 1rem;
@@ -39,6 +39,8 @@
       background-color: #1f1f2e;
       color: white;
       transition: background-color 0.3s ease;
+      width: 100%; /* Make buttons full-width */
+      box-sizing: border-box; /* Include padding in width */
     }
     button:hover {
       background-color: #343454;
@@ -51,13 +53,32 @@
     }
     #scoreCard {
       margin-top: 2rem;
-      font-size: 1.2rem;
+      font-size: 1.1rem; /* Adjusted font size */
+      text-align: left; /* Align score card text */
     }
-    #timer, #wrongCounter, #streakCounter, #progressTracker {
-      font-size: 1rem;
+
+    /* --- NEW STATS HEADER STYLES --- */
+    #statsContainer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem;
+      border-radius: 8px;
       margin-bottom: 1rem;
-      color: #ffd700;
     }
+    #statsContainer > div {
+      font-size: 1rem;
+      color: #ffd700;
+      flex-basis: 25%;
+      text-align: center;
+    }
+    /* Remove individual margins that were there before */
+    #timer, #wrongCounter, #streakCounter, #progressTracker {
+      margin-bottom: 0;
+    }
+    /* --- END NEW STYLES --- */
+
     #restartBtn {
       margin-top: 2rem;
       padding: 0.7rem 2rem;
@@ -71,15 +92,27 @@
     #nameForm {
       margin-bottom: 1.5rem;
     }
-    #nameInput {
+    #nameInput, #departmentSelect {
       display: block;
-  width: 90%;
-  max-width: 300px;
-  margin: 0.5rem auto; 
-  padding: 0.7rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: none;
+      width: 90%;
+      max-width: 300px;
+      margin: 0.75rem auto; /* Adjusted margin */
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      box-sizing: border-box;
+    }
+    #nameForm p {
+        font-size: 0.9rem; /* Smaller font for quotes */
+        line-height: 1.4;
+    }
+    #audioContainer {
+        margin-bottom: 1rem;
+    }
+    #quizAudio {
+        width: 100%;
+        max-width: 400px;
     }
   </style>
 </head>
@@ -87,31 +120,29 @@
   <div class="container" id="quizContainer">
    <div id="nameForm">
   <p style="color: #ffd700; font-size: 1rem; margin-bottom: 0.5rem;">
-   "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better." Samuel Beckett <br> "Try not. Do. Or, do not. There is no Try." Yoda. <br> "The Opposite of a Good Idea is another Good Idea." Neils Bohr <br>
-      </a>
+   "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better." Samuel Beckett <br> "Try not. Do. Or, do not. There is no Try." Yoda. <br> "The Opposite of a Good Idea is another GoodIdea." Neils Bohr
   </p>
 
   <!-- Department Selector -->
-  <select id="departmentSelect" style="display: block; width: 90%; max-width: 300px; margin: 0.5rem auto; padding: 0.7rem; font-size: 1rem; border-radius: 5px; border: none;">
+  <select id="departmentSelect">
     <option value="">-- Select Department --</option>
     <option value="Cyber Security">Cyber Security</option>
     <option value="CSE-1">CSE-1</option>
     <option value="CSE-2">CSE-2</option>
     <option value="CSE-3">CSE-3</option>
-<option value="Mechanical Engineering">Mechanical Engineering</option>
-<option value="ECE-1">ECE-1</option>
-<option value="ECE-2">ECE-2</option>
-<option value="ECE-3">ECE-3</option>
-<option value="AI DS-1">AI DS-1</option>
-<option value="AI DS-2">AI DS-2</option>
-<option value="Civil">Civil</option>
-<option value="Agri">Agri</option>
-<option value="EEE">EEE</option>
-<option value="EIE">EIE</option>
-<option value="Medical Electronics">Medical Electronics</option>
-<option value="IT-1">IT-1</option>
-<option value="IT-2">IT-2</option>
- 
+    <option value="Mechanical Engineering">Mechanical Engineering</option>
+    <option value="ECE-1">ECE-1</option>
+    <option value="ECE-2">ECE-2</option>
+    <option value="ECE-3">ECE-3</option>
+    <option value="AI DS-1">AI DS-1</option>
+    <option value="AI DS-2">AI DS-2</option>
+    <option value="Civil">Civil</option>
+    <option value="Agri">Agri</option>
+    <option value="EEE">EEE</option>
+    <option value="EIE">EIE</option>
+    <option value="Medical Electronics">Medical Electronics</option>
+    <option value="IT-1">IT-1</option>
+    <option value="IT-2">IT-2</option>
   </select>
 
   <!-- Name Fields -->
@@ -121,12 +152,17 @@
 
 
     <div id="quizContent" style="display:none;">
-      <div id="timer">⏳ Time: 0s</div>
-      <div id="wrongCounter">❌ Wrong Attempts: 0</div>
-      <div id="streakCounter">🔥 Streak: 0</div>
-      <div id="progressTracker">📍 Question 1 of 5</div>
+      <!-- --- NEW STATS HEADER --- -->
+      <div id="statsContainer">
+        <div id="timer">⏳ 0s</div>
+        <div id="wrongCounter">❌ 0</div>
+        <div id="streakCounter">🔥 0</div>
+        <div id="progressTracker">📍 0 / 0</div>
+      </div>
+      <!-- --- END STATS HEADER --- -->
+      
       <!-- Audio Clip for Listening Comprehension -->
-<div id="audioContainer" style="margin-bottom: 1rem;">
+<div id="audioContainer">
   <audio id="quizAudio" controls>
     <source src="https://raw.githubusercontent.com/andrewveda/3/1330764b2b61993ba6b3a8be6b1c3e69370f1fe3/Pygmalion.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
@@ -342,14 +378,20 @@
   }
 ];
 
-    let current = 0;
-    let correctCount = 0;
-    let totalWrongGuesses = 0;
+    // --- QUIZ LOGIC VARIABLES ---
+    let questionQueue = [];
+    let incorrectlyAnsweredIndices = new Set();
+    let isRetryRound = false;
+    let guessesThisAttempt = 0;
+
+    let current = 0; // Now tracks progress *through the queue*
+    let correctCount = 0; // Tracks questions *passed* this round
+    let totalWrongGuesses = 0; // Tracks ALL wrong clicks
     let startTime;
     let timerInterval;
     let playerName = "";
-    let playerNumber = "";
-    let guessesPerQuestion = [];
+    let playerDepartment = "";
+    let guessesPerQuestion = []; // Tracks guesses for the *first round only*
     let currentStreak = 0;
     let highestStreak = 0;
     let streakHistory = [];
@@ -358,14 +400,10 @@
     const optionsEl = document.getElementById("options");
     const timerEl = document.getElementById("timer");
     const wrongCounterEl = document.getElementById("wrongCounter");
-    const deptField = document.getElementById("departmentSelect");
-    const deptVal = deptField.value;
     const streakCounterEl = document.getElementById("streakCounter");
     const progressTracker = document.getElementById("progressTracker");
     const scoreCard = document.getElementById("scoreCard");
     const restartBtn = document.getElementById("restartBtn");
-
-    let playerDepartment = "";
 
 function beginQuiz() {
   const nameField = document.getElementById("nameInput");
@@ -374,19 +412,23 @@ function beginQuiz() {
   const nameVal = nameField.value.trim();
   const deptVal = deptField.value;
 
+  // Simple validation
   if (!deptVal) {
-    alert("Please select your department!");
+    deptField.style.border = "2px solid red";
     return;
+  } else {
+    deptField.style.border = "none";
   }
 
   if (!nameVal) {
-    alert("Please enter your name!");
+    nameField.style.border = "2px solid red";
     return;
+  } else {
+     nameField.style.border = "none";
   }
 
   playerName = nameVal;
   playerDepartment = deptVal;
-
 
   document.getElementById("nameForm").style.display = "none";
   document.getElementById("quizContent").style.display = "block";
@@ -395,18 +437,28 @@ function beginQuiz() {
 
 
     function startQuiz() {
+      // (Re)set all counters and state variables
       current = 0;
       correctCount = 0;
       totalWrongGuesses = 0;
-      guessesPerQuestion = [];
+      guessesPerQuestion = new Array(quizData.length).fill(0); // Tracks first round
       currentStreak = 0;
       highestStreak = 0;
       streakHistory = [];
+      
+      // Create the initial queue of all question indices
+      questionQueue = quizData.map((_, index) => index);
+      incorrectlyAnsweredIndices.clear();
+      isRetryRound = false;
+
       startTime = Date.now();
 
-      timerEl.innerText = "⏳ Time: 0s";
-      wrongCounterEl.innerText = `❌ Wrong Attempts: 0`;
-      streakCounterEl.innerText = `🔥 Streak: 0`;
+      // --- UPDATE STATS DISPLAY ---
+      timerEl.innerText = "⏳ 0s";
+      wrongCounterEl.innerText = `❌ 0`;
+      streakCounterEl.innerText = `🔥 0`;
+      // --- END UPDATE ---
+      
       scoreCard.innerHTML = "";
       restartBtn.style.display = "none";
 
@@ -415,102 +467,195 @@ function beginQuiz() {
     }
 
     function loadQuestion() {
-      if (current >= quizData.length) return showScore();
+      // Check if we've finished the current queue
+      if (current >= questionQueue.length) {
+        return showScore();
+      }
 
-      const data = quizData[current];
-      guessesPerQuestion[current] = 0;
+      guessesThisAttempt = 0; // Reset guess counter for this new question
+      
+      const questionIndex = questionQueue[current]; // Get index from the queue
+      const data = quizData[questionIndex]; // Get data using that index
+      
       optionsEl.innerHTML = "";
       questionEl.innerHTML = `${data.q}<br><br><em>Example:<br>${data.example.join("<br>")}</em>`;
-      progressTracker.innerText = `📍 Question ${current + 1} of ${quizData.length}`;
+      
+      // --- UPDATE STATS DISPLAY ---
+      // Progress tracker shows progress through the *current* queue
+      progressTracker.innerText = `📍 ${current + 1} / ${questionQueue.length}`;
+      // --- END UPDATE ---
 
       data.options.forEach((option, index) => {
         const btn = document.createElement("button");
         btn.innerText = option;
         btn.dataset.index = index;
+        // Pass the original correct answer array to the handler
         btn.onclick = () => handleAnswer(btn, data.correct);
         optionsEl.appendChild(btn);
       });
     }
 
     function handleAnswer(button, correctIndexes) {
-      guessesPerQuestion[current]++;
+      guessesThisAttempt++; // Increment guesses for *this attempt*
+      const questionIndex = questionQueue[current]; // Get the *original* question index
+
+      // Only track first-round guesses in the persistent array
+      if (!isRetryRound) {
+        guessesPerQuestion[questionIndex]++;
+      }
+
       const idx = parseInt(button.dataset.index);
       const isCorrect = correctIndexes.includes(idx);
 
       if (isCorrect) {
         button.classList.add("correct");
-        button.disabled = true;
+        button.disabled = true; // Disable correct button
         currentStreak++;
         if (currentStreak > highestStreak) highestStreak = currentStreak;
-        streakHistory.push(currentStreak);
-        streakCounterEl.innerText = `🔥 Streak: ${currentStreak}`;
+        
+        // --- UPDATE STATS DISPLAY ---
+        streakCounterEl.innerText = `🔥 ${currentStreak}`;
+        // --- END UPDATE ---
 
+        // Check if all correct options have been clicked (for future multi-select)
         const allClicked = correctIndexes.every(i =>
-          document.querySelector(`button[data-index="${i}"]`).classList.contains("correct")
+          optionsEl.querySelector(`button[data-index="${i}"]`).classList.contains("correct")
         );
 
         if (allClicked) {
-          correctCount++;
+          // This question is complete
+          correctCount++; // Mark as passed *for this round*
+          streakHistory.push(currentStreak);
+          
+          // If it took more than one guess, mark for retry
+          if (guessesThisAttempt > 1) {
+            incorrectlyAnsweredIndices.add(questionIndex);
+          }
+
+          // Move to the next question in the queue
           setTimeout(() => {
-            current++;
+            current++; // Increment queue position
             loadQuestion();
           }, 500);
         }
       } else {
-        totalWrongGuesses++;
-        wrongCounterEl.innerText = `❌ Wrong Attempts: ${totalWrongGuesses}`;
+        // --- INCORRECT GUESS ---
+        totalWrongGuesses++; // Increment global wrong counter
+        
+        // Mark this question for retry, no matter what
+        incorrectlyAnsweredIndices.add(questionIndex);
+
+        // Flash red
         button.classList.add("wrong");
         setTimeout(() => button.classList.remove("wrong"), 500);
+        
+        // Reset streak
         currentStreak = 0;
-        streakCounterEl.innerText = `🔥 Streak: 0`;
+        
+        // --- UPDATE STATS DISPLAY ---
+        wrongCounterEl.innerText = `❌ ${totalWrongGuesses}`;
+        streakCounterEl.innerText = `🔥 0`;
+        // --- END UPDATE ---
       }
     }
 
     function showScore() {
-      clearInterval(timerInterval);
-      const totalTime = Math.floor((Date.now() - startTime) / 1000);
-      questionEl.innerText = "🎉 Quiz Completed!";
-      optionsEl.innerHTML = "";
-      progressTracker.innerText = "";
-      scoreCard.innerHTML = `
-        <p>👤 Player: ${playerName} </p>
-        <p>✅ Correct Answers: ${correctCount} / ${quizData.length}</p>
-        <p>❌ Wrong Attempts: ${totalWrongGuesses}</p>
-        <p>🔥 Highest Streak: ${highestStreak}</p>
-        <p>⏱️ Time Taken: ${totalTime} seconds</p>
-        <p>📝 Guesses per Question: ${guessesPerQuestion.join(", ")}</p>
-      `;
-      restartBtn.style.display = "inline-block";
+      // Check if any questions were marked for retry
+      if (incorrectlyAnsweredIndices.size > 0) {
+        // --- START RETRY ROUND ---
+        questionEl.innerText = `Retrying ${incorrectlyAnsweredIndices.size} questions you missed. Get them right on the first try!`;
+        optionsEl.innerHTML = "";
+        scoreCard.innerHTML = "";
+        
+        // --- UPDATE STATS DISPLAY ---
+        progressTracker.innerText = "🔄 Retrying...";
+        // --- END UPDATE ---
 
-      // Post results to Google Sheet
-      fetch("https://script.google.com/macros/s/AKfycbxA0lRkERWFt2cYfmm04IQioaG4-21k5VFF5CFKP30zyVaJXM5_27PL3v8JIZEweK3u/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-                  name: playerName,
-                   correct: correctCount,
-          wrong: totalWrongGuesses,
-          time: totalTime,
-          department: playerDepartment,
-  questId: "ELLL 3",
-          guesses: guessesPerQuestion
-                    })
-      });
+        // Set the new queue to *only* the failed questions
+        questionQueue = Array.from(incorrectlyAnsweredIndices);
+        incorrectlyAnsweredIndices.clear(); // Clear the set for the *next* round
+        
+        // Reset round-specific counters
+        current = 0;
+        correctCount = 0;
+        currentStreak = 0;
+        
+        // --- UPDATE STATS DISPLAY ---
+        streakCounterEl.innerText = `🔥 0`;
+        // --- END UPDATE ---
+        
+        isRetryRound = true; // Set the flag
+
+        // Load the first question of the retry round after a delay
+        setTimeout(loadQuestion, 2500);
+
+      } else {
+        // --- QUIZ FINALLY FINISHED ---
+        clearInterval(timerInterval);
+        const totalTime = Math.floor((Date.now() - startTime) / 1000);
+        
+        questionEl.innerText = "🎉 Quiz Completed!";
+        optionsEl.innerHTML = "";
+        
+        // --- UPDATE STATS DISPLAY ---
+        progressTracker.innerText = "🎉 Done!";
+        // --- END UPDATE ---
+        
+        scoreCard.innerHTML = `
+          <p>👤 Player: ${playerName}</p>
+          <p>🏢 Department: ${playerDepartment}</p>
+          <p>✅ Questions Passed: ${quizData.length} / ${quizData.length}</p>
+          <p>❌ Total Wrong Attempts: ${totalWrongGuesses}</p>
+          <p>🔥 Highest Streak: ${highestStreak}</p>
+          <p>⏱️ Total Time Taken: ${totalTime} seconds</p>
+          <p>📝 Guesses (First Round): ${guessesPerQuestion.join(", ")}</p>
+        `;
+        
+        restartBtn.style.display = "inline-block";
+        isRetryRound = false; // Reset for a full restart
+
+        // Post results to Google Sheet
+        fetch("https://script.google.com/macros/s/AKfycbxA0lRkERWFt2cYfmm04IQioaG4-21k5VFF5CFKP30zyVaJXM5_27PL3v8JIZEweK3u/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+                    name: playerName,
+                    correct: quizData.length, // Always full score on completion
+                    wrong: totalWrongGuesses,
+                    time: totalTime,
+                    department: playerDepartment,
+                    questId: "ELLL 3",
+                    guesses: guessesPerQuestion // Send first-round guesses
+                      })
+        }).catch(err => console.error("Error posting to sheet:", err));
+      }
     }
 
     function startTimer() {
+      // Clear any existing timer
+      if (timerInterval) clearInterval(timerInterval);
+      
       timerInterval = setInterval(() => {
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        timerEl.innerText = `⏳ Time: ${elapsed}s`;
+        // --- UPDATE STATS DISPLAY ---
+        timerEl.innerText = `⏳ ${elapsed}s`;
+        // --- END UPDATE ---
       }, 1000);
     }
 
     restartBtn.onclick = () => {
+      // Go back to the name entry screen
       document.getElementById("quizContent").style.display = "none";
       document.getElementById("nameForm").style.display = "block";
+      // Clear fields for next user
       document.getElementById("nameInput").value = "";
+      document.getElementById("departmentSelect").value = "";
+      
+      // Stop the timer if it's somehow still running
+      if (timerInterval) clearInterval(timerInterval);
     };
   </script>
 </body>
 </html>
+
