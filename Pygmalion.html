@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>V for Video! 🌌</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(ellipse at bottom, #0b0c1b 0%, #000000 100%);
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    button {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #1f1f2e;
+      color: white;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button:hover {
+      background-color: #343454;
+    }
+    .correct {
+      background-color: green !important;
+    }
+    .wrong {
+      background-color: red !important;
+    }
+    #scoreCard {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      text-align: left;
+    }
+
+    #statsContainer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    #statsContainer > div {
+      font-size: 1rem;
+      color: #ffd700;
+      flex-basis: 25%;
+      text-align: center;
+    }
+    #restartBtn {
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      font-size: 1.1rem;
+      background-color: #444466;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+    #nameForm {
+      margin-bottom: 1.5rem;
+    }
+    #nameInput, #departmentSelect {
+      display: block;
+      width: 90%;
+      max-width: 300px;
+      margin: 0.75rem auto;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      box-sizing: border-box;
+    }
+    #nameForm p {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    #audioContainer {
+      margin-bottom: 1rem;
+    }
+    #quizAudio {
+      width: 100%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container" id="quizContainer">
+
+  <!-- NAME FORM -->
+  <div id="nameForm">
+    <p style="color: #ffd700; font-size: 1rem; margin-bottom: 0.5rem;">
+      "Ever tried. Ever failed. No matter. Try again. Fail again. Fail better." — Beckett <br>
+      "Try not. Do. Or do not. There is no try." — Yoda <br>
+      "The opposite of a good idea is another good idea." — Bohr
+    </p>
+
+    <select id="departmentSelect">
+      <option value="">-- Select Department --</option>
+      <option value="Cyber Security">Cyber Security</option>
+      <option value="CSE-1">CSE-1</option>
+      <option value="CSE-2">CSE-2</option>
+      <option value="CSE-3">CSE-3</option>
+      <option value="Mechanical Engineering">Mechanical Engineering</option>
+      <option value="ECE-1">ECE-1</option>
+      <option value="ECE-2">ECE-2</option>
+      <option value="ECE-3">ECE-3</option>
+      <option value="AI DS-1">AI DS-1</option>
+      <option value="AI DS-2">AI DS-2</option>
+      <option value="Civil">Civil</option>
+      <option value="Agri">Agri</option>
+      <option value="EEE">EEE</option>
+      <option value="EIE">EIE</option>
+      <option value="Medical Electronics">Medical Electronics</option>
+      <option value="IT-1">IT-1</option>
+      <option value="IT-2">IT-2</option>
+    </select>
+
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <button onclick="beginQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- QUIZ CONTENT -->
+  <div id="quizContent" style="display:none;">
+
+      <!-- Stats -->
+      <div id="statsContainer">
+        <div id="timer">⏳ 0s</div>
+        <div id="wrongCounter">❌ 0</div>
+        <div id="streakCounter">🔥 0</div>
+        <div id="progressTracker">📍 0 / 0</div>
+      </div>
+
+      <!-- Audio -->
+      <div id="audioContainer">
+        <audio id="quizAudio" controls>
+          <source src="https://raw.githubusercontent.com/andrewveda/3/1330764b2b61993ba6b3a8be6b1c3e69370f1fe3/Pygmalion.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="question" id="question">Loading...</div>
+      <div class="options" id="options"></div>
+      <div id="scoreCard"></div>
+      <button id="restartBtn" style="display:none;">Restart</button>
+  </div>
+
+</div>
+
+<script>
+/* --------------------------------------------------------
+   QUIZ DATA
+---------------------------------------------------------*/
+const quizData = [
+  {
+    "q": "What is the Pygmalion effect?",
+    "options": [
+      "A phenomenon where expectations have no effect on performance",
+      "A phenomenon where higher expectations lead to higher performance",
+      "A phenomenon where lower expectations lead to higher performance",
+      "A psychological effect only observed in animals"
+    ],
+    "correct": [1],
+    "example": ["🌟📈🏀"]
+  },
+  {
+    "q": "In the basketball example, how does the coach's attitude toward Chris differ from Joe?",
+    "options": [
+      "The coach pushes Chris to do better and gives feedback, but gives Joe little attention and guidance",
+      "The coach ignores Chris but gives Joe extra training",
+      "The coach punishes Chris for mistakes and encourages Joe",
+      "The coach treats both players equally"
+    ],
+    "correct": [0],
+    "example": ["🏀👀💪"]
+  },
+  {
+    "q": "What did Rosenthal’s rat experiment demonstrate?",
+    "options": [
+      "Maze complexity affects rat performance",
+      "Rats have varying intelligence levels",
+      "Smart rats are genetically superior",
+      "Coaches’ expectations influenced the rats’ performance"
+    ],
+    "correct": [3],
+    "example": ["🐀👨‍🏫✨"]
+  },
+   {
+    "q": "In the Pygmalion in school study, what was the main mechanism through which teacher expectations influenced student performance?",
+    "options": [
+      "By giving higher grades regardless of work",
+      "By acting differently toward students they believed were talented, offering more attention and encouragement",
+      "By changing the classroom curriculum for certain students",
+      "By informing the students they were talented"
+    ],
+    "correct": [1],
+    "example": ["👩‍🏫✨💡📈"]
+  },
+  {
+    "q": "What does the Pygmalion effect suggest about the power of teacher expectations?",
+    "options": [
+      "Teacher expectations have no measurable impact on student learning",
+      "Teacher expectations can unconsciously shape students’ motivation, confidence, and outcomes",
+      "Teacher expectations only matter if students are already high achievers",
+      "Teacher expectations guarantee students’ success"
+    ],
+    "correct": [1],
+    "example": ["🧠👩‍🏫➡️📚🌟"]
+  },
+  {
+    "q": "Why were the students in the Pygmalion study unaware of the information given to teachers?",
+    "options": [
+      "So that the effect measured was based on teacher behavior, not student self-perception",
+      "Because the students were too young to understand",
+      "Because it was unethical to tell students",
+      "To confuse the researchers"
+    ],
+    "correct": [0],
+    "example": ["🙈👩‍🏫➡️🏫📊"]
+  },
+  {
+    "q": "Which of these best illustrates the Pygmalion effect in a classroom?",
+    "options": [
+      "A teacher unconsciously calls on certain students more, gives more feedback, and those students improve",
+      "A teacher gives equal attention and support to all students",
+      "Students are told they are gifted but receive no extra support",
+      "The teacher follows the curriculum strictly without interacting"
+    ],
+    "correct": [0],
+    "example": ["🗣️👩‍🏫👦📈"]
+  },
+  {
+    "q": "What lesson about teaching can be drawn from the Pygmalion effect study?",
+    "options": [
+      "Teachers should avoid having expectations to remain neutral",
+      "Positive expectations and belief in students’ abilities can lead to real improvement",
+      "Teachers should only focus on top performers",
+      "Student effort is irrelevant if teachers are biased"
+    ],
+    "correct": [1],
+    "example": ["🌟👩‍🏫➡️💪📚"]
+  },
+  {
+    "q": "The Pygmalion effect shows that in classrooms, students’ outcomes are shaped by:",
+    "options": [
+      "Only their innate intelligence",
+      "Teachers’ conscious and unconscious beliefs about their potential",
+      "Random chance",
+      "School resources alone"
+    ],
+    "correct": [1],
+    "example": ["🧠👩‍🏫➡️🏫📈"]
+  },
+  {
+    "q": "If a teacher expects low performance from certain students, the Pygmalion effect predicts:",
+    "options": [
+      "Students will outperform expectations anyway",
+      "Students may receive less support, lose confidence, and underperform",
+      "Expectations have no effect",
+      "Students’ performance depends entirely on grades"
+    ],
+    "correct": [1],
+    "example": ["📉👩‍🏫➡️😔📚"]
+  },
+  {
+    "q": "What conclusion did Robert Rosenthal make about expectations?",
+    "options": [
+      "Expecting certain behaviors can lead us to act in ways that make them occur",
+      "Expectations negatively affect intelligence",
+      "Expectations do not influence others' behavior",
+      "Expectations only work in controlled experiments"
+    ],
+    "correct": [0],
+    "example": ["🤔➡️💡✅"]
+  },
+  {
+    "q": "Which factor starts the Pygmalion effect circle?",
+    "options": [
+      "The final performance outcome",
+      "The beliefs about another person's abilities",
+      "The beliefs about oneself",
+      "The actions of the other person"
+    ],
+    "correct": [1],
+    "example": ["🔄🧠👤"]
+  },
+  {
+    "q": "What is the result of Chris receiving positive attention from the coach?",
+    "options": [
+      "Chris loses interest in playing",
+      "Chris believes in his own success and trains harder",
+      "Chris becomes dependent on the coach",
+      "Chris ignores the coach’s feedback"
+    ],
+    "correct": [1],
+    "example": ["🏀😃💯"]
+  },
+  {
+    "q": "How did the beliefs of the basketball players about themselves affect their actions?",
+    "options": [
+      "Chris trained less, Joe trained more",
+      "Their beliefs had no effect on their actions",
+      "Chris gave his full effort and enjoyed playing, Joe gave less effort and missed sessions",
+      "Both Chris and Joe became overconfident"
+    ],
+    "correct": [2],
+    "example": ["🏀😊😔📉"]
+  },
+  {
+    "q": "Which of these statements reflects the Pygmalion effect correctly?",
+    "options": [
+      "High expectations can lead to improved performance through supportive actions",
+      "Expectations have no connection to performance",
+      "Only genetic ability determines performance outcomes",
+      "Negative expectations always improve performance"
+    ],
+    "correct": [0],
+    "example": ["🌟➡️📈🙌"]
+  },
+ {
+    "q": "If perspectives create reality, what is a key way to improve outcomes in any human interaction?",
+    "options": [
+      "Ignore people’s feelings and abilities",
+      "Hold positive, supportive expectations and act accordingly",
+      "Focus only on rules and metrics, not relationships",
+      "Wait for objective data before acting"
+    ],
+    "correct": [1],
+    "example": ["🌟🤝💪"]
+  },
+  {
+    "q": "Which statement best aligns with the philosophical idea behind the Pygmalion effect?",
+    "options": [
+      "Reality exists independently of our beliefs and expectations",
+      "Our perceptions and expectations actively shape the outcomes we experience",
+      "Human behavior is entirely determined by genetics",
+      "Expectations have no influence on others’ reality"
+    ],
+    "correct": [1],
+    "example": ["🧠➡️🌎✨"]
+  },
+  {
+    "q": "The Pygmalion effect supports the idea that:",
+    "options": [
+      "Expecting nothing leads to better results",
+      "Beliefs, expectations, and actions together shape what we experience as reality",
+      "Reality is fully objective and independent of human perception",
+      "Only tangible rewards influence outcomes"
+    ],
+    "correct": [1],
+    "example": ["💭👀➡️🌎"]
+  }
+];
+
+/* --------------------------------------------------------
+   QUIZ STATE VARIABLES
+---------------------------------------------------------*/
+let questionQueue = [];
+let incorrectlyAnsweredIndices = new Set();
+let isRetryRound = false;
+let guessesThisAttempt = 0;
+
+let current = 0;
+let correctCount = 0;
+let totalWrongGuesses = 0;
+let startTime;
+let timerInterval;
+
+let playerName = "";
+let playerDepartment = "";
+let guessesPerQuestion = [];
+let currentStreak = 0;
+let highestStreak = 0;
+
+/* --------------------------------------------------------
+   DOM REFERENCES
+---------------------------------------------------------*/
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const timerEl = document.getElementById("timer");
+const wrongCounterEl = document.getElementById("wrongCounter");
+const streakCounterEl = document.getElementById("streakCounter");
+const progressTracker = document.getElementById("progressTracker");
+const scoreCard = document.getElementById("scoreCard");
+const restartBtn = document.getElementById("restartBtn");
+
+/* --------------------------------------------------------
+   START QUIZ
+---------------------------------------------------------*/
+function beginQuiz() {
+  const nameField = document.getElementById("nameInput");
+  const deptField = document.getElementById("departmentSelect");
+
+  const nameVal = nameField.value.trim();
+  const deptVal = deptField.value;
+
+  if (!deptVal) {
+    deptField.style.border = "2px solid red";
+    return;
+  }
+  if (!nameVal) {
+    nameField.style.border = "2px solid red";
+    return;
+  }
+
+  playerName = nameVal;
+  playerDepartment = deptVal;
+
+  document.getElementById("nameForm").style.display = "none";
+  document.getElementById("quizContent").style.display = "block";
+
+  startQuiz();
+}
+
+/* --------------------------------------------------------
+   INITIALISE QUIZ
+---------------------------------------------------------*/
+function startQuiz() {
+  current = 0;
+  correctCount = 0;
+  totalWrongGuesses = 0;
+  guessesPerQuestion = new Array(quizData.length).fill(0);
+  currentStreak = 0;
+  highestStreak = 0;
+  incorrectlyAnsweredIndices.clear();
+  isRetryRound = false;
+
+  questionQueue = quizData.map((_, i) => i);
+
+  timerEl.innerText = "⏳ 0s";
+  wrongCounterEl.innerText = "❌ 0";
+  streakCounterEl.innerText = "🔥 0";
+
+  scoreCard.innerHTML = "";
+  restartBtn.style.display = "none";
+
+  startTime = Date.now();
+  startTimer();
+  loadQuestion();
+}
+
+/* --------------------------------------------------------
+   LOAD QUESTION
+---------------------------------------------------------*/
+function loadQuestion() {
+  if (current >= questionQueue.length) {
+    return showScore();
+  }
+
+  guessesThisAttempt = 0;
+
+  const questionIndex = questionQueue[current];
+  const data = quizData[questionIndex];
+
+  optionsEl.innerHTML = "";
+  questionEl.innerHTML = `${data.q}<br><br><em>Example:<br>${data.example.join("<br>")}</em>`;
+
+  progressTracker.innerText = `📍 ${current + 1} / ${questionQueue.length}`;
+
+  data.options.forEach((opt, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.dataset.index = index;
+    btn.onclick = () => handleAnswer(btn, data.correct);
+    optionsEl.appendChild(btn);
+  });
+}
+
+/* --------------------------------------------------------
+   HANDLE ANSWER
+---------------------------------------------------------*/
+function handleAnswer(button, correctIndexes) {
+  guessesThisAttempt++;
+  const questionIndex = questionQueue[current];
+  const idx = parseInt(button.dataset.index);
+
+  if (!isRetryRound) guessesPerQuestion[questionIndex]++;
+
+  if (correctIndexes.includes(idx)) {
+    button.classList.add("correct");
+    button.disabled = true;
+
+    currentStreak++;
+    if (currentStreak > highestStreak) highestStreak = currentStreak;
+    streakCounterEl.innerText = `🔥 ${currentStreak}`;
+
+    const allCorrectSelected = correctIndexes.every(i =>
+      optionsEl.querySelector(`button[data-index="${i}"]`).classList.contains("correct")
+    );
+
+    if (allCorrectSelected) {
+      correctCount++;
+
+      if (guessesThisAttempt > 1) incorrectlyAnsweredIndices.add(questionIndex);
+
+      setTimeout(() => {
+        current++;
+        loadQuestion();
+      }, 400);
+    }
+  } else {
+    totalWrongGuesses++;
+    incorrectlyAnsweredIndices.add(questionIndex);
+
+    button.classList.add("wrong");
+    setTimeout(() => button.classList.remove("wrong"), 500);
+
+    currentStreak = 0;
+    wrongCounterEl.innerText = `❌ ${totalWrongGuesses}`;
+    streakCounterEl.innerText = `🔥 0`;
+  }
+}
+
+/* --------------------------------------------------------
+   SUPABASE SEND LOGIC
+---------------------------------------------------------*/
+const EDGE_FUNCTION_URL =
+  "https://ahezssoczvpbkteffcgz.supabase.co/functions/v1/logQuest";
+
+async function sendViaEdgeFunction(payload) {
+  try {
+    const response = await fetch(EDGE_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      console.error("❌ Edge function error:", await response.text());
+      return;
+    }
+
+    console.log("✅ Saved to Supabase");
+  } catch (err) {
+    console.error("⚠️ Error calling edge function:", err);
+  }
+}
+
+/* --------------------------------------------------------
+   SHOW FINAL SCORE
+---------------------------------------------------------*/
+function showScore() {
+  if (incorrectlyAnsweredIndices.size > 0) {
+    questionEl.innerText = `Retrying ${incorrectlyAnsweredIndices.size} question(s)...`;
+    optionsEl.innerHTML = "";
+    scoreCard.innerHTML = "";
+    progressTracker.innerText = "🔄 Retrying...";
+
+    questionQueue = Array.from(incorrectlyAnsweredIndices);
+    incorrectlyAnsweredIndices.clear();
+    current = 0;
+    currentStreak = 0;
+    isRetryRound = true;
+
+    setTimeout(loadQuestion, 1800);
+    return;
+  }
+
+  clearInterval(timerInterval);
+  const totalTime = Math.floor((Date.now() - startTime) / 1000);
+
+  questionEl.innerText = "🎉 Quiz Completed!";
+  optionsEl.innerHTML = "";
+  progressTracker.innerText = "🎉 Done!";
+
+  scoreCard.innerHTML = `
+    <p>👤 ${playerName}</p>
+    <p>🏢 ${playerDepartment}</p>
+    <p>✅ Correct: ${quizData.length}</p>
+    <p>❌ Wrong Attempts: ${totalWrongGuesses}</p>
+    <p>🔥 Highest Streak: ${highestStreak}</p>
+    <p>⏱️ Time: ${totalTime}s</p>
+    <p>📝 Guesses per question: ${guessesPerQuestion.join(", ")}</p>
+  `;
+
+  restartBtn.style.display = "inline-block";
+
+  /** SEND TO SUPABASE **/
+  sendViaEdgeFunction({
+    student_name: playerName,
+    department: playerDepartment,
+    correct: quizData.length,
+    wrong: totalWrongGuesses,
+    time_spent: totalTime,
+    guesses: guessesPerQuestion,
+    quest_id: "Quest 110"
+  });
+}
+
+/* --------------------------------------------------------
+   TIMER
+---------------------------------------------------------*/
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    timerEl.innerText = `⏳ ${elapsed}s`;
+  }, 1000);
+}
+
+/* --------------------------------------------------------
+   RESTART
+---------------------------------------------------------*/
+restartBtn.onclick = () => {
+  document.getElementById("quizContent").style.display = "none";
+  document.getElementById("nameForm").style.display = "block";
+  document.getElementById("nameInput").value = "";
+  document.getElementById("departmentSelect").value = "";
+  clearInterval(timerInterval);
+};
+
+</script>
+
+</body>
+</html>
