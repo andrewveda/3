@@ -580,7 +580,6 @@
           </div>
         </div>`;
 
-      // ── SEND TO SUPABASE EDGE FUNCTION (same as Story Quest) ──
       async function trySave(attempt) {
         attempt = attempt || 1;
         const payload = {
@@ -589,7 +588,7 @@
           correct:      quizData.length,
           wrong:        totalWrongGuesses,
           time_spent:   totalTime,
-          quest_id:     "ELLL 3"
+          quest_id:     "Quest 210"
         };
         try {
           const ctrl = new AbortController();
