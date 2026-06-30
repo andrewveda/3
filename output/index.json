@@ -1,5 +1,6 @@
 {
   "pawn": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",
@@ -211,6 +212,7 @@
     "part0209.json"
   ],
   "knight": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",
@@ -375,6 +377,7 @@
     "part0162.json"
   ],
   "bishop": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",
@@ -528,6 +531,7 @@
     "part0151.json"
   ],
   "rook": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",
@@ -807,6 +811,7 @@
     "part0277.json"
   ],
   "queen": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",
@@ -1021,6 +1026,7 @@
     "part0212.json"
   ],
   "king": [
+    "index.json",
     "part0001.json",
     "part0002.json",
     "part0003.json",

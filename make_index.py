@@ -3,9 +3,10 @@ import json
 
 ROOT = "output"
 
-index = {}
+master = {}
 
 for piece in ["pawn", "knight", "bishop", "rook", "queen", "king"]:
+
     folder = os.path.join(ROOT, piece)
 
     files = sorted(
@@ -13,9 +14,15 @@ for piece in ["pawn", "knight", "bishop", "rook", "queen", "king"]:
         if f.endswith(".json")
     )
 
-    index[piece] = files
+    # Per-piece index
+    with open(os.path.join(folder, "index.json"), "w") as f:
+        json.dump(files, f, indent=2)
 
+    # Master index
+    master[piece] = files
+
+# Master index
 with open(os.path.join(ROOT, "index.json"), "w") as f:
-    json.dump(index, f, indent=2)
+    json.dump(master, f, indent=2)
 
-print("index.json created")
+print("Done.")
