@@ -593,9 +593,10 @@ function initBoardIfNeeded(){
   window.addEventListener('resize', ()=>state.board && state.board.resize());
 }
 function pieceThemeUrl(piece){
-  // chessboard.js default CDN pieces, switchable by style setting
+  // cdnjs only mirrors the chessboard-js JS/CSS, not the piece image assets,
+  // so piece images are served from the official chessboardjs.com host instead.
   const style = state.settings.pieceStyle || 'wikipedia';
-  return `https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/img/chesspieces/${style}/${piece}.png`;
+  return `https://chessboardjs.com/img/chesspieces/${style}/${piece}.png`;
 }
 
 async function startTraining(pieceKey, presetPuzzle){
